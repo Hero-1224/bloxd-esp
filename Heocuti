@@ -1,0 +1,21 @@
+// ==UserScript==
+// @name         TROLLIUM CUA HEO CUTI:<>
+// @match        *://bloxd.io/*
+// @grant        none
+// ==/UserScript==
+
+(function() {
+  'use strict';
+
+  // ESP
+  const observer = new MutationObserver(() => {
+      const players = document.querySelectorAll('[id*="Player"]');
+      players.forEach(p => p.style.outline = '2px solid red');
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+
+  // AutoClicker
+  setInterval(() => {
+    document.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  }, 50);
+})();
