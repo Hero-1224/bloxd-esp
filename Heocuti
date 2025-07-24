@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Trollium V2
+// @name         heocuti
 // @match        *://bloxd.io/*
 // @grant        none
 // ==/UserScript==
@@ -7,105 +7,48 @@
 (function () {
     'use strict';
 
-    // === UI MENU ===
+    // ========== MENU UI ==========
     const menu = document.createElement("div");
     menu.style = `
-        position: fixed; top: 80px; left: 20px;
-        background: rgba(0,0,0,0.8); color: white;
-        padding: 10px; border-radius: 10px;
-        font-family: monospace; z-index: 9999;
+      position: fixed; top: 60px; left: 20px;
+      background: #111; color: #0f0;
+      padding: 10px; border-radius: 8px;
+      font-family: monospace; z-index: 99999;
     `;
     menu.innerHTML = `
-        <h3>🎮 DaikaHack V2</h3>
-        <label><input type="checkbox" id="esp"> ESP</label><br>
-        <label><input type="checkbox" id="killaura"> KillAura</label><br>
-        <label><input type="checkbox" id="autoblock"> Auto Block</label><br>
-        <label><input type="checkbox" id="fly"> Fly</label><br>
-        <label><input type="checkbox" id="noclip"> NoClip</label><br>
-        <label><input type="checkbox" id="hitbox"> Hitbox++</label><br>
-        <label><input type="checkbox" id="aimbot"> Aimbot</label><br>
-        <label><input type="checkbox" id="bunnyhop"> Bunny Hop</label><br>
-        <p style="font-size: 12px;">Press [M] to hide/show menu</p>
+      <h3>DaikaHack V2.1</h3>
+      <label><input type="checkbox" id="esp"> ESP</label><br>
+      <label><input type="checkbox" id="killaura"> KillAura</label><br>
+      <small>Nhấn phím M để ẩn/hiện menu</small>
     `;
     document.body.appendChild(menu);
 
+    // Toggle ẩn/hiện menu
     let visible = true;
-    document.addEventListener('keydown', e => {
-        if (e.key.toLowerCase() === 'm') {
+    document.addEventListener("keydown", (e) => {
+        if (e.key.toLowerCase() === "m") {
             visible = !visible;
-            menu.style.display = visible ? 'block' : 'none';
+            menu.style.display = visible ? "block" : "none";
         }
     });
 
-    // === ESP ===
-    const observer = new MutationObserver(() => {
-        if (!document.querySelector('#esp').checked) return;
+    // ========== ESP ==========
+    setInterval(() => {
+        const checkbox = document.querySelector("#esp");
+        if (!checkbox || !checkbox.checked) return;
         const players = document.querySelectorAll('[id*="Player"]');
-        players.forEach(p => p.style.outline = '2px solid red');
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-
-    // === Bunny Hop ===
-    let isJumping = false;
-    document.addEventListener('keydown', e => {
-        if (e.key === 'w' && document.querySelector('#bunnyhop').checked) {
-            if (!isJumping) {
-                isJumping = true;
-                window.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
-                setTimeout(() => isJumping = false, 100);
+        players.forEach(p => {
+            if (!p.style.outline) {
+                p.style.outline = '2px solid red';
             }
-        }
-    });
+        });
+    }, 500); // mỗi 0.5s quét lại
 
-    // === AutoBlock (fake) ===
+    // ========== KillAura ==========
     setInterval(() => {
-        if (document.querySelector('#autoblock').checked) {
-            window.dispatchEvent(new KeyboardEvent("keydown", { key: 'f' }));
-        }
-    }, 500);
-
-    // === KillAura (giả lập click) ===
-    setInterval(() => {
-        if (document.querySelector('#killaura').checked) {
-            document.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-        }
-    }, 100);
-
-    // === Fly (fake transform) ===
-    document.addEventListener('keydown', e => {
-        if (e.key === ' ' && document.querySelector('#fly').checked) {
-            const player = document.querySelector('[id*="Player"]');
-            if (player) player.style.transform += ' translateY(-10px)';
-        }
-    });
-
-    // === NoClip (ẩn collision box) ===
-    setInterval(() => {
-        if (document.querySelector('#noclip').checked) {
-            const walls = document.querySelectorAll('[id*="Wall"]');
-            walls.forEach(w => w.style.opacity = "0.1");
-        }
-    }, 500);
-
-    // === Hitbox++
-    setInterval(() => {
-        if (document.querySelector('#hitbox').checked) {
-            const enemies = document.querySelectorAll('[id*="Player"]');
-            enemies.forEach(e => e.style.transform += ' scale(1.4)');
-        }
-    }, 1000);
-
-    // === Aimbot (tự xoay camera - demo) ===
-    setInterval(() => {
-        if (!document.querySelector('#aimbot').checked) return;
-        const players = document.querySelectorAll('[id*="Player"]');
-        if (players.length > 1) {
-            const me = players[0];
-            const enemy = players[1];
-            if (me && enemy) {
-                me.style.transform = 'rotate(45deg)'; // chỉ là fake, chưa thật
-            }
-        }
-    }, 500);
+        const checkbox = document.querySelector("#killaura");
+        if (!checkbox || !checkbox.checked) return;
+        document.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    }, 60); // click tự động mỗi 60ms
 
 })();
